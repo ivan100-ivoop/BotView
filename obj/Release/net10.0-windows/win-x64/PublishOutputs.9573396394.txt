@@ -1,2 +1,0 @@
-C:\Users\pc-ivan-work\Desktop\projects\BotView\bin\Release\net10.0-windows\win-x64\publish\BotView.pdb
-C:\Users\pc-ivan-work\Desktop\projects\BotView\bin\Release\net10.0-windows\win-x64\publish\BotView.exe
