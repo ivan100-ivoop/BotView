@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "kO6Ko5mbMmk=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\pc-ivan-work\\Desktop\\projects\\BotView\\BotView.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\pc-ivan-work\\.nuget\\packages\\microsoft.web.webview2\\1.0.3650.58\\microsoft.web.webview2.1.0.3650.58.nupkg.sha512"
+  ],
+  "logs": []
+}
