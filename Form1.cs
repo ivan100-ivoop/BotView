@@ -1,7 +1,9 @@
 ﻿using Microsoft.Web.WebView2.Core;
 using System.Diagnostics;
 using System.Net;
+using System.Text.Json;
 using System.Windows.Forms;
+using static System.Net.WebRequestMethods;
 
 namespace Google_View
 {
@@ -14,23 +16,10 @@ namespace Google_View
         private string proxy = "";
         private ToolStripMenuItem switchOff = new ToolStripMenuItem("Switch Off");
         private ToolStripSeparator separator = new ToolStripSeparator();
-        private Dictionary<string, string> proxyList = new Dictionary<string, string>
-            {
-                { "Germany", "http://1.1.1.1:8080" },
-                { "Italy", "http://2.2.2.2:8080" },
-                { "USA", "http://3.3.3.3:8080" },
-            };
-
-        private Dictionary<string, string> UserAgentList = new Dictionary<string, string>
-        {
-            { "Googlebot", "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)" },
-            { "Googlebot-Mobile", "Mozilla/5.0 (Linux; Android 6.0.1; Nexus 5X) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.96 Mobile Safari/537.36 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)" },
-            { "Googlebot-Desktop", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120 Safari/537.36 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)" },
-            { "Safari 17 (MacOS)", "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_0) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Safari/605.1.15" },
-            { "Firefox 122 (Windows 11)", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:122.0) Gecko/20100101 Firefox/122.0"},
-            { "Edge 120 (Windows 11)", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 Edg/120.0.0.0" },
-            { "Chrome 120 (Windows 11)", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" }
-        };
+        private string AgentUrl = "https://raw.githubusercontent.com/ivan100-ivoop/BotView/refs/heads/main/agent.json";
+        private string ProxyUrl = "https://raw.githubusercontent.com/ivan100-ivoop/BotView/refs/heads/main/proxy.json";
+        private Dictionary<string, string> proxyList = new Dictionary<string, string> { };
+        private Dictionary<string, string> UserAgentList = new Dictionary<string, string> {};
         private ToolStripMenuItem selectedProxyMenuItem = null;
 
 
@@ -42,19 +31,48 @@ namespace Google_View
         private async void Form1_Load(object sender, EventArgs e)
         {
 
-            foreach (var ual in UserAgentList)
+            using (HttpClient client = new HttpClient())
             {
-                user_agent.Items.Add(ual.Key);
+                try
+                {
+                    string AgentJson = await client.GetStringAsync(AgentUrl);
+                    UserAgentList = JsonSerializer.Deserialize<Dictionary<string, string>>(AgentJson)!;
+                    foreach (var ual in UserAgentList)
+                    {
+                        user_agent.Items.Add(ual.Key);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Failed to load User-Agents: {ex.Message}", "ERROR", MessageBoxButtons.OK);
+                }
+
+                try
+                {
+                    string ProxyJson = await client.GetStringAsync(ProxyUrl);
+                    proxyList = JsonSerializer.Deserialize<Dictionary<string, string>>(ProxyJson)!;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Failed to load Proxy: {ex.Message}", "ERROR", MessageBoxButtons.OK);
+                }
+
+                loadUI();
             }
+        }
 
-            user_agent.SelectedIndex = 0;
+        private void loadUI()
+        {
+            if (UserAgentList.Count >= 1)
+                user_agent.SelectedIndex = 0;
+
             url_address.Text = url;
-
             toolStripProgressBar1.Visible = false;
             toolStripProgressBar1.Style = ProgressBarStyle.Marquee;
 
             PopulateProxyMenu();
             InitializeWebViewWithProxy();
+
         }
 
         private async Task InitializeWebViewWithProxy(string proxy = "")
@@ -183,7 +201,8 @@ namespace Google_View
             if (!Uri.TryCreate(url, UriKind.Absolute, out var uri))
                 return;
 
-            webView21.CoreWebView2.Settings.UserAgent = UserAgentList.FirstOrDefault(kvp => kvp.Key == selectedAgent).Value;
+            if (UserAgentList.Count >= 1)
+                webView21.CoreWebView2.Settings.UserAgent = UserAgentList.FirstOrDefault(kvp => kvp.Key == selectedAgent).Value;
 
             if (webView21.Source != null && webView21.Source == uri)
             {
