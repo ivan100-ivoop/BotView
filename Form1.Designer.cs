@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            Label label1;
             statusStrip1 = new StatusStrip();
             toolStripProgressBar1 = new ToolStripProgressBar();
             toolStripStatusLabel1 = new ToolStripStatusLabel();
@@ -39,17 +40,31 @@
             panel3 = new Panel();
             webView21 = new Microsoft.Web.WebView2.WinForms.WebView2();
             panel2 = new Panel();
-            user_agent = new ComboBox();
-            button1 = new Button();
-            label1 = new Label();
+            flowLayoutPanel1 = new FlowLayoutPanel();
             url_address = new TextBox();
+            button1 = new Button();
+            user_agent = new ComboBox();
+            label1 = new Label();
             statusStrip1.SuspendLayout();
             menuStrip1.SuspendLayout();
             panel1.SuspendLayout();
             panel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)webView21).BeginInit();
             panel2.SuspendLayout();
+            flowLayoutPanel1.SuspendLayout();
             SuspendLayout();
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Dock = DockStyle.Fill;
+            label1.ForeColor = SystemColors.ControlText;
+            label1.Location = new Point(3, 0);
+            label1.Name = "label1";
+            label1.Size = new Size(95, 38);
+            label1.TabIndex = 1;
+            label1.Text = "Address:";
+            label1.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // statusStrip1
             // 
@@ -60,7 +75,7 @@
             statusStrip1.Location = new Point(0, 716);
             statusStrip1.Name = "statusStrip1";
             statusStrip1.Padding = new Padding(2, 0, 16, 0);
-            statusStrip1.Size = new Size(1581, 35);
+            statusStrip1.Size = new Size(1562, 35);
             statusStrip1.TabIndex = 5;
             statusStrip1.Text = "statusStrip1";
             // 
@@ -91,10 +106,11 @@
             // menuStrip1
             // 
             menuStrip1.ImageScalingSize = new Size(24, 24);
+            menuStrip1.ImeMode = ImeMode.Disable;
             menuStrip1.Items.AddRange(new ToolStripItem[] { proxyToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
-            menuStrip1.Size = new Size(1581, 36);
+            menuStrip1.Size = new Size(1562, 36);
             menuStrip1.TabIndex = 6;
             menuStrip1.Text = "menuStrip1";
             // 
@@ -112,7 +128,7 @@
             panel1.Dock = DockStyle.Fill;
             panel1.Location = new Point(0, 36);
             panel1.Name = "panel1";
-            panel1.Size = new Size(1581, 680);
+            panel1.Size = new Size(1562, 680);
             panel1.TabIndex = 7;
             // 
             // panel3
@@ -121,7 +137,7 @@
             panel3.Dock = DockStyle.Fill;
             panel3.Location = new Point(0, 56);
             panel3.Name = "panel3";
-            panel3.Size = new Size(1581, 624);
+            panel3.Size = new Size(1562, 624);
             panel3.TabIndex = 1;
             // 
             // webView21
@@ -132,77 +148,77 @@
             webView21.Dock = DockStyle.Fill;
             webView21.Location = new Point(0, 0);
             webView21.Name = "webView21";
-            webView21.Size = new Size(1581, 624);
+            webView21.Size = new Size(1562, 624);
             webView21.TabIndex = 0;
             webView21.ZoomFactor = 1D;
             // 
             // panel2
             // 
-            panel2.Controls.Add(user_agent);
-            panel2.Controls.Add(button1);
-            panel2.Controls.Add(label1);
-            panel2.Controls.Add(url_address);
+            panel2.Controls.Add(flowLayoutPanel1);
             panel2.Dock = DockStyle.Top;
             panel2.Location = new Point(0, 0);
             panel2.Name = "panel2";
-            panel2.Size = new Size(1581, 56);
+            panel2.Size = new Size(1562, 56);
             panel2.TabIndex = 0;
             // 
-            // user_agent
+            // flowLayoutPanel1
             // 
-            user_agent.FormattingEnabled = true;
-            user_agent.Location = new Point(1306, 6);
-            user_agent.Name = "user_agent";
-            user_agent.Size = new Size(248, 32);
-            user_agent.TabIndex = 3;
-            user_agent.SelectedIndexChanged += user_agent_SelectedIndexChanged;
+            flowLayoutPanel1.Controls.Add(label1);
+            flowLayoutPanel1.Controls.Add(url_address);
+            flowLayoutPanel1.Controls.Add(button1);
+            flowLayoutPanel1.Controls.Add(user_agent);
+            flowLayoutPanel1.Dock = DockStyle.Fill;
+            flowLayoutPanel1.Location = new Point(0, 0);
+            flowLayoutPanel1.Name = "flowLayoutPanel1";
+            flowLayoutPanel1.Size = new Size(1562, 56);
+            flowLayoutPanel1.TabIndex = 4;
+            // 
+            // url_address
+            // 
+            url_address.Dock = DockStyle.Fill;
+            url_address.Location = new Point(104, 3);
+            url_address.Name = "url_address";
+            url_address.Size = new Size(1063, 30);
+            url_address.TabIndex = 0;
+            url_address.KeyPress += url_address_KeyPress;
             // 
             // button1
             // 
+            button1.Dock = DockStyle.Top;
             button1.ForeColor = SystemColors.ControlText;
-            button1.Location = new Point(1188, 4);
+            button1.Location = new Point(1173, 3);
             button1.Name = "button1";
-            button1.Size = new Size(112, 34);
+            button1.Size = new Size(112, 32);
             button1.TabIndex = 2;
             button1.Text = "Go";
             button1.UseVisualStyleBackColor = true;
             button1.Click += button1_Click;
             // 
-            // label1
+            // user_agent
             // 
-            label1.AutoSize = true;
-            label1.ForeColor = SystemColors.ControlText;
-            label1.Location = new Point(12, 9);
-            label1.Name = "label1";
-            label1.Size = new Size(95, 24);
-            label1.TabIndex = 1;
-            label1.Text = "Address:";
-            // 
-            // url_address
-            // 
-            url_address.Location = new Point(119, 6);
-            url_address.Name = "url_address";
-            url_address.Size = new Size(1063, 30);
-            url_address.TabIndex = 0;
-            url_address.Enter += url_address_Enter;
+            user_agent.Dock = DockStyle.Fill;
+            user_agent.FormattingEnabled = true;
+            user_agent.Location = new Point(1291, 3);
+            user_agent.Name = "user_agent";
+            user_agent.Size = new Size(248, 32);
+            user_agent.TabIndex = 3;
+            user_agent.SelectedIndexChanged += user_agent_SelectedIndexChanged;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(12F, 24F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1581, 751);
+            ClientSize = new Size(1562, 751);
             Controls.Add(panel1);
             Controls.Add(statusStrip1);
             Controls.Add(menuStrip1);
             Font = new Font("Arial", 10F, FontStyle.Bold, GraphicsUnit.Point, 0);
             ForeColor = SystemColors.ControlLightLight;
-            FormBorderStyle = FormBorderStyle.FixedToolWindow;
             MainMenuStrip = menuStrip1;
             Margin = new Padding(4, 3, 4, 3);
-            MaximizeBox = false;
-            MinimizeBox = false;
+            MinimumSize = new Size(1584, 807);
             Name = "Form1";
-            StartPosition = FormStartPosition.CenterScreen;
+            ShowIcon = false;
             Text = "BotView";
             Load += Form1_Load;
             statusStrip1.ResumeLayout(false);
@@ -213,7 +229,8 @@
             panel3.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)webView21).EndInit();
             panel2.ResumeLayout(false);
-            panel2.PerformLayout();
+            flowLayoutPanel1.ResumeLayout(false);
+            flowLayoutPanel1.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -231,8 +248,8 @@
         private Panel panel2;
         private TextBox url_address;
         private Button button1;
-        private Label label1;
         private ComboBox user_agent;
         private Microsoft.Web.WebView2.WinForms.WebView2 webView21;
+        private FlowLayoutPanel flowLayoutPanel1;
     }
 }

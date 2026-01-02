@@ -19,8 +19,8 @@ namespace Google_View
         private string AgentUrl = "https://raw.githubusercontent.com/ivan100-ivoop/BotView/refs/heads/main/agent.json";
         private string ProxyUrl = "https://raw.githubusercontent.com/ivan100-ivoop/BotView/refs/heads/main/proxy.json";
         private Dictionary<string, string> proxyList = new Dictionary<string, string> { };
-        private Dictionary<string, string> UserAgentList = new Dictionary<string, string> {};
-        private ToolStripMenuItem selectedProxyMenuItem = null;
+        private Dictionary<string, string> UserAgentList = new Dictionary<string, string> { };
+        private ToolStripMenuItem? selectedProxyMenuItem = null;
 
 
         public Form1()
@@ -30,7 +30,6 @@ namespace Google_View
 
         private async void Form1_Load(object sender, EventArgs e)
         {
-
             using (HttpClient client = new HttpClient())
             {
                 try
@@ -56,23 +55,24 @@ namespace Google_View
                 {
                     MessageBox.Show($"Failed to load Proxy: {ex.Message}", "ERROR", MessageBoxButtons.OK);
                 }
-
-                loadUI();
             }
+
+            await loadUIAsync();
         }
 
-        private void loadUI()
+        private async Task loadUIAsync()
         {
             if (UserAgentList.Count >= 1)
+            {
                 user_agent.SelectedIndex = 0;
+                proxyToolStripMenuItem.Visible = false;
+            }
 
-            url_address.Text = url;
             toolStripProgressBar1.Visible = false;
             toolStripProgressBar1.Style = ProgressBarStyle.Marquee;
 
             PopulateProxyMenu();
-            InitializeWebViewWithProxy();
-
+            await InitializeWebViewWithProxy();
         }
 
         private async Task InitializeWebViewWithProxy(string proxy = "")
@@ -99,7 +99,7 @@ namespace Google_View
             };
             panel3.Controls.Add(webView21);
 
-            CoreWebView2Environment env = null;
+            CoreWebView2Environment? env = null;
             if (!string.IsNullOrWhiteSpace(proxy))
             {
                 env = await CoreWebView2Environment.CreateAsync(
@@ -144,7 +144,7 @@ namespace Google_View
             foreach (var kvp in proxyList)
             {
                 var item = new ToolStripMenuItem(kvp.Key);
-                item.Tag = kvp.Value;               
+                item.Tag = kvp.Value;
                 item.Click += proxyMenuItem_Click;
                 proxyToolStripMenuItem.DropDownItems.Add(item);
             }
@@ -161,7 +161,7 @@ namespace Google_View
 
         private void user_agent_SelectedIndexChanged(object sender, EventArgs e)
         {
-            selectedAgent = user_agent.SelectedItem?.ToString();
+            selectedAgent = user_agent.SelectedItem?.ToString() ?? string.Empty;
             Navigate();
         }
 
@@ -170,7 +170,7 @@ namespace Google_View
             url = url_address.Text;
             Navigate();
         }
-        private string GetSiteIP(string url)
+        private string GetSiteIP()
         {
             try
             {
@@ -192,9 +192,15 @@ namespace Google_View
             if (!webViewReady || webView21.CoreWebView2 == null)
                 return;
 
+            if (string.IsNullOrEmpty(url_address.Text))
+            {
+                url_address.Text = url;
+            }
+
             if (!url.StartsWith("http://", StringComparison.OrdinalIgnoreCase) && !url.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
             {
                 url = $"https://{url}";
+                url_address.Text = url;
             }
 
 
@@ -213,7 +219,7 @@ namespace Google_View
                 webView21.Source = uri;
             }
 
-            toolStripStatusLabel2.Text = $"{GetSiteIP(url)} ({url})";
+            toolStripStatusLabel2.Text = $"{GetSiteIP()} ({url})";
         }
 
         private void ShowLoadTime()
@@ -234,7 +240,7 @@ namespace Google_View
             toolStripStatusLabel1.Text = $"Loaded in {readable}";
         }
 
-        private async void proxyMenuItem_Click(object sender, EventArgs e)
+        private async void proxyMenuItem_Click(object? sender, EventArgs e)
         {
             if (sender is ToolStripMenuItem item)
             {
@@ -251,7 +257,8 @@ namespace Google_View
         }
 
 
-        private async void switchOffToolStripMenuItem_Click(object sender, EventArgs e)
+        // Change the signature of switchOffToolStripMenuItem_Click to allow nullable sender
+        private async void switchOffToolStripMenuItem_Click(object? sender, EventArgs e)
         {
             proxy = "";
 
@@ -262,10 +269,13 @@ namespace Google_View
             await InitializeWebViewWithProxy();
         }
 
-        private void url_address_Enter(object sender, EventArgs e)
+        private void url_address_KeyPress(object sender, KeyPressEventArgs e)
         {
-            url = url_address.Text;
-            Navigate();
+            if (e.KeyChar == Convert.ToChar(Keys.Enter))
+            {
+                url = url_address.Text;
+                Navigate();
+            }
         }
     }
 }
